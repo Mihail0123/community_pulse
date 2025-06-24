@@ -26,7 +26,7 @@ class Vote(BaseModel):
         db.String(56),
         nullable=False
     )
-    user_agent = Mapped[str] = mapped_column(
+    user_agent: Mapped[str] = mapped_column(
         db.String(150),
         nullable=True
     )

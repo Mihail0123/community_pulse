@@ -8,6 +8,9 @@ from src.core.config import settings
 db = SQLAlchemy()
 
 def init_database(app: Flask) -> None:
+    from src.models import Poll, PollOption, PollStatistics, \
+        OptionStatistics, Vote, User
+
     db.init_app(app)
 
 # INIT ROUTES

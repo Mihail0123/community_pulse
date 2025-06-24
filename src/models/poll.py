@@ -17,11 +17,11 @@ class Poll(BaseModel):
         nullable=True
     )
     start_date: Mapped[datetime] = mapped_column(
-        db.Datetime,
+        db.DateTime,
         nullable=False
     )
     end_date: Mapped[datetime] = mapped_column(
-        db.Datetime,
+        db.DateTime,
         nullable=False
     )
     is_active: Mapped[bool] = mapped_column(

@@ -16,7 +16,7 @@ class User(BaseModel):
         default=True
     )
     is_admin: Mapped[bool] = mapped_column(
-        db.Bollean,
+        db.Boolean,
         default=False
     )
 
