@@ -77,11 +77,11 @@ class PollOption(BaseModel):
 
     votes: Mapped[list['Vote']] = relationship(
         'Vote',
-        back_populates='options',
+        back_populates='option',
     )
 
-    option_stats: Mapped['OptionStatistics'] = relationship(
+    statistics: Mapped['OptionStatistics'] = relationship(
         'OptionStatistics',
-        back_populates='options',
+        back_populates='option',
         cascade='all, delete-orphan'
     )
