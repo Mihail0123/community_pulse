@@ -9,6 +9,7 @@ polls_blueprint = Blueprint(
     __name__,
     url_prefix=f"{settings.API_PREFIX}/{settings.API_VERSION}/polls"
 )
+poll_controller = PollController()
 
 polls_blueprint.add_url_rule(
     '',
@@ -24,7 +25,7 @@ polls_blueprint.add_url_rule(
 
 polls_blueprint.add_url_rule(
     '<int:poll_id>',
-    view_func=PollController.get_poll_by_id,
+    view_func=poll_controller.get_poll_by_id,
     methods=['GET']
 )
 
