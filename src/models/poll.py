@@ -3,7 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.orm.attributes import backref_listeners
 
 from src.models.base import BaseModel
-from src.core.app_runner import db
+from src.core.db import db
 
 class Poll(BaseModel):
     __tablename__ = "polls"
@@ -36,7 +36,7 @@ class Poll(BaseModel):
 
     # Relations
 
-    poll_options: Mapped[list['PollOption']] = relationship(
+    options: Mapped[list['PollOption']] = relationship(
         'PollOption',
         back_populates='poll',
         cascade='all, delete-orphan',
@@ -48,7 +48,7 @@ class Poll(BaseModel):
         cascade='all, delete-orphan',
     )
 
-    poll_stats: Mapped['PollStatistic'] = relationship(
+    statistics: Mapped['PollStatistic'] = relationship(
         'PollStatistic',
         back_populates='poll',
         uselist=False,
@@ -72,7 +72,7 @@ class PollOption(BaseModel):
 
     poll: Mapped[Poll] = relationship(
         'Poll',
-        back_populates='poll_options'
+        back_populates='options'
     )
 
     votes: Mapped[list['Vote']] = relationship(
