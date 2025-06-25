@@ -1,3 +1,4 @@
+from __future__ import annotations
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base import BaseModel
@@ -38,12 +39,12 @@ class Vote(BaseModel):
         back_populates='votes',
     )
 
-    options: Mapped['PollOption'] = relationship(
+    option: Mapped['PollOption'] = relationship(
         'PollOption',
         back_populates='votes',
     )
 
     voter: Mapped['User'] = relationship(
-        'user',
+        'User',
         back_populates='votes',
     )

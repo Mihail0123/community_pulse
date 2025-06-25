@@ -1,3 +1,4 @@
+from __future__ import annotations
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base import BaseModel
@@ -25,13 +26,12 @@ class PollStatistics(BaseModel):
 
     poll: Mapped['Poll'] = relationship(
         'Poll',
-        back_populates='poll_stats',
-        cascade='all, delete-orphan'
+        back_populates='poll_stats'
     )
 
     option_stats: Mapped[list['OptionStatistics']] = relationship(
         'OptionStatistics',
-        back_populates='statistic',
+        back_populates='poll_stats',
         cascade='all, delete-orphan'
     )
 
@@ -65,8 +65,8 @@ class OptionStatistics(BaseModel):
         'PollStatistics',
         back_populates='option_stats'
     )
-    options: Mapped['PollOption'] = relationship(
+    option: Mapped['PollOption'] = relationship(
         'PollOption',
-        back_populates='option_stats'
+        back_populates='statistics'
     )
 

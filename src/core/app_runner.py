@@ -1,11 +1,9 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
 from src.core.config import settings
+from src.core.db import db
 
-# INIT DB
-db = SQLAlchemy()
 
 def init_database(app: Flask) -> None:
     from src.models import Poll, PollOption, PollStatistics, \

@@ -1,101 +1,94 @@
+from __future__ import annotations
 from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.orm.attributes import backref_listeners
 from sqlalchemy import ForeignKey
-from src.models.category import Category  # Импортируем модель категории
+from src.models.category import Category
 
 from src.models.base import BaseModel
 from src.core.db import db
 
 
-class Poll(BaseModel):  # Таблица "polls" — опросы
+class Poll(BaseModel):
     __tablename__ = "polls"
 
-    # Основные поля
-    title: Mapped[str] = mapped_column(  # Заголовок опроса
+    title: Mapped[str] = mapped_column(
         db.String(120),
         nullable=False
     )
-    description: Mapped[str] = mapped_column(  # Описание (необязательное)
+    description: Mapped[str] = mapped_column(
         db.Text,
         nullable=True
     )
-    start_date: Mapped[datetime] = mapped_column(  # Дата начала
+    start_date: Mapped[datetime] = mapped_column(
         db.DateTime,
         nullable=False
     )
-    end_date: Mapped[datetime] = mapped_column(  # Дата окончания
+    end_date: Mapped[datetime] = mapped_column(
         db.DateTime,
         nullable=False
     )
-    is_active: Mapped[bool] = mapped_column(  # Активен ли опрос
+    is_active: Mapped[bool] = mapped_column(
         db.Boolean,
         default=True,
     )
-    is_anonymous: Mapped[bool] = mapped_column(  # Анонимный ли опрос
+    is_anonymous: Mapped[bool] = mapped_column(
         db.Boolean,
         default=True,
     )
 
-    # Новое: связь с категорией
-    category_id: Mapped[int] = mapped_column(  # ID категории (внешний ключ на таблицу categories)
+    category_id: Mapped[int] = mapped_column(
         db.Integer,
         ForeignKey('categories.id'),
         nullable=True
     )
-    category: Mapped["Category"] = relationship(  # Сам объект категории (удобно обращаться: poll.category.name)
-        "Category",
-        backref="polls",  # Позволяет из категории получить список опросов: category.polls
+    category: Mapped['Category'] = relationship(
+        'Category',
+        backref='polls',
     )
 
-    # Relations (связи с другими таблицами)
-
-    options: Mapped[list['PollOption']] = relationship(  # Связь с вариантами ответа
+    options: Mapped[list['PollOption']] = relationship(
         'PollOption',
         back_populates='poll',
         cascade='all, delete-orphan',
     )
 
-    votes: Mapped[list['Vote']] = relationship(  # Связь с голосами
+    votes: Mapped[list['Vote']] = relationship(
         'Vote',
         back_populates='poll',
         cascade='all, delete-orphan',
     )
 
-    statistics: Mapped['PollStatistic'] = relationship(  # Связь со статистикой по опросу
-        'PollStatistic',
+    poll_stats: Mapped['PollStatistics'] = relationship(
+        'PollStatistics',
         back_populates='poll',
-        uselist=False,  # Один к одному
-        cascade='all, delete-orphan',
+        uselist=False
     )
 
 
-class PollOption(BaseModel):  # Таблица poll_options — варианты ответа на опрос
+class PollOption(BaseModel):
     __tablename__ = 'poll_options'
 
-    poll_id: Mapped[int] = mapped_column(  # Внешний ключ на опрос
+    poll_id: Mapped[int] = mapped_column(
         db.Integer,
         db.ForeignKey('polls.id'),
         nullable=False
     )
-    text: Mapped[str] = mapped_column(  # Текст варианта ответа
+    text: Mapped[str] = mapped_column(
         db.String(80),
         nullable=False
     )
 
-    # Relations
-
-    poll: Mapped[Poll] = relationship(  # Обратная связь с Poll
+    poll: Mapped['Poll'] = relationship(
         'Poll',
         back_populates='options'
     )
 
-    votes: Mapped[list['Vote']] = relationship(  # Связь с голосами, отданными за этот вариант
+    votes: Mapped[list['Vote']] = relationship(
         'Vote',
         back_populates='option',
     )
 
-    statistics: Mapped['OptionStatistics'] = relationship(  # Статистика по конкретному варианту
+    statistics: Mapped['OptionStatistics'] = relationship(
         'OptionStatistics',
         back_populates='option',
         cascade='all, delete-orphan'
